@@ -30,18 +30,18 @@ services:
       POSTGRES_PASSWORD: Gorridean
       POSTGRES_HOST_AUTH_METHOD: trust
 
-nginx:
-  image: nginx:alpine
-  ports:
-    - "80:80"
-  volumes:
-    - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    - ./bonaso_data_web/dist:/usr/share/nginx/html:ro
-    - ./bonaso_data_server/static:/static:ro
-    - ./bonaso_data_server/media:/media
-  depends_on:
-    - backend
-    - frontend
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./bonaso_data_web/dist:/usr/share/nginx/html:ro
+      - ./bonaso_data_server/static:/static:ro
+      - ./bonaso_data_server/media:/media
+    depends_on:
+      - backend
+      - frontend
 
 volumes:
   postgres_data:
