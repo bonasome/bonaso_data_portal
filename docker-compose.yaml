@@ -1,3 +1,4 @@
+version: "3.9"
 
 services:
   backend:
@@ -11,14 +12,6 @@ services:
       - "8000"
     depends_on:
       - db
-
-  frontend:
-    build:
-      context: ./bonaso_data_web
-      dockerfile: ../bonaso_data_web/Dockerfile
-    container_name: frontend
-    expose:
-      - 80
 
   db:
     image: postgres:17.5
@@ -35,12 +28,12 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./bonaso_data_server/static:/static:ro
-      - ./bonaso_data_server/media:/media
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./bonaso_data_web/dist:/usr/share/nginx/html:ro  # React SPA build
+      - ./bonaso_data_server/static:/static:ro
+      - ./bonaso_data_server/media:/media:ro
     depends_on:
       - backend
-      - frontend
 
 volumes:
   postgres_data:
