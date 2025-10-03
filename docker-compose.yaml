@@ -1,35 +1,43 @@
 services:
   backend:
-    build: ./bonaso_data_server
-    command: gunicorn bonaso_data_server.wsgi:application --bind 0.0.0.0:8000
+    build: ./bonaso_data_server # directory containing the backend Dockerfile
+    command: gunicorn bonaso_data_server.wsgi:application --bind 0.0.0.0:8000  # production server build command
     volumes:
-      - ./bonaso_data_server:/app
+      - ./bonaso_data_server:/app # mount source code into container for live updates
     env_file:
-      - ./bonaso_data_server/.env
+      - ./bonaso_data_server/.env # environment file: secret key, DB URL, DEBUG, etc.
     expose:
-      - "8000"
+      - "8000" # makes port 8000 available to other services (not directly to host)
     depends_on:
-      - db
+      - db # ensures db container starts before backend (not a health check)
 
+  # -------------------------
+  # DATABASE - PostgreSQL 17.5
+  # -------------------------
   db:
     image: postgres:17.5
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
+      - postgres_data:/var/lib/postgresql/data # persist DB data outside container
+    environment: # pulled from .env in project root
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_HOST_AUTH_METHOD: trust
-
+      POSTGRES_HOST_AUTH_METHOD: trust # allow local connections (safe only in dev)
+  
+  # -------------------------
+  # NGINX - Reverse proxy + static/media server
+  # -------------------------
   nginx:
-    build: ./bonaso_data_web
+    build: ./bonaso_data_web # directory containing frontend/nginx config
     ports:
-      - "80:80"
+      - "80:80" # open at port 80
     volumes:
-      - ./bonaso_data_server/static:/static:ro
-      - ./bonaso_data_server/media:/media:ro
+      - ./bonaso_data_server/static:/static:ro # serve Django static files (read-only)
+      - ./bonaso_data_server/media:/media:ro # serve uploaded media files (read-only)
     depends_on:
-      - backend
-
+      - backend # ensures backend starts first
+# -------------------------
+# NAMED VOLUMES
+# -------------------------
 volumes:
-  postgres_data:
+  postgres_data: # volume to persist Postgres data
