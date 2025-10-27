@@ -36,7 +36,7 @@ services:
       - ./bonaso_data_server/static:/static:ro # serve Django static files (read-only)
       - ./bonaso_data_server/media:/media:ro # serve uploaded media files (read-only)
       - ./certbot/www:/var/www/certbot
-      - ./certbot/conf:/etc/letsencrypt
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - backend # ensures backend starts first
 # -------------------------
