@@ -30,10 +30,13 @@ services:
   nginx:
     build: ./bonaso_data_web # directory containing frontend/nginx config
     ports:
-      - "80:80" # open at port 80
+      - "443:443" # open at port 443 #https
+      - "80:80" #unsecured/http at port 80
     volumes:
       - ./bonaso_data_server/static:/static:ro # serve Django static files (read-only)
       - ./bonaso_data_server/media:/media:ro # serve uploaded media files (read-only)
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
     depends_on:
       - backend # ensures backend starts first
 # -------------------------
