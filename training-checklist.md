@@ -1,15 +1,15 @@
 ## Accounts/Services
 - [] Railway/Netlify
 - [] Gmail
-- [] Nashua
+- [x] Nashua
 
 ## Codebase
-- [] Database Schema
+- [x] Database Schema
 - [] Dataflow overview
 - [] Frontend mechanics (components, routes, etc)
 - [] Tests Overview
 
 ## Dev
 - [x] Setup dev server
-- [] production setup
+- [x] production setup
 
